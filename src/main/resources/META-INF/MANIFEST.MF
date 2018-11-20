@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+FMLCorePlugin: com.porpit.ultimateitem.core.PPPatchingLoader
+FMLCorePluginContainsFMLMod: com.porpit.ultimateitem.core.PPDummy
+ForceLoadAsMod: true

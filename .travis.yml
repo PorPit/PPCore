@@ -9,7 +9,6 @@ before_install:
  - chmod +x gradlew 
  
 jdk:
-  - openjdk8
   - oraclejdk8
 
 git:

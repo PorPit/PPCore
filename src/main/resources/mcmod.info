@@ -2,7 +2,7 @@
   {
     "modid": "ppcore",
     "name": "PPCore",
-    "description": "",
+    "description": "ppcore",
     "version": "${version}",
     "mcversion": "${mcversion}",
     "url": "",

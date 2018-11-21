@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-FMLCorePlugin: com.porpit.ultimateitem.core.PPPatchingLoader
-FMLCorePluginContainsFMLMod: com.porpit.ultimateitem.core.PPDummy
+FMLCorePlugin: com.porpit.ppcore.core.PPPatchingLoader
+FMLCorePluginContainsFMLMod: com.porpit.ppcore.core.PPDummy
 ForceLoadAsMod: true

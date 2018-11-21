@@ -83,8 +83,8 @@ tasks.withType(JavaCompile) {
 
 jar {
 	manifest {
-		attributes 'FMLCorePlugin': 'com.porpit.ultimateitem.core.PPPatchingLoader'
-		attributes 'FMLCorePluginContainsFMLMod': 'com.porpit.ultimateitem.core.PPDummy'
+		attributes 'FMLCorePlugin': 'com.porpit.ppcore.core.PPPatchingLoader'
+		attributes 'FMLCorePluginContainsFMLMod': 'com.porpit.ppcore.core.PPDummy'
 		attributes 'ForceLoadAsMod': 'true'
 	}
 }

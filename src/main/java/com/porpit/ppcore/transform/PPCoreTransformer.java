@@ -151,7 +151,7 @@ public abstract class PPCoreTransformer implements IClassTransformer {
                 mn.desc=notchDesc;
 
                 for (int j = 0; j < nodeData.methods.size(); j++) {
-                    System.out.println( nodeData.methods.get(j).name+":"+mn.name+"-"+ nodeData.methods.get(j).desc+":"+mn.desc);
+                    //System.out.println( nodeData.methods.get(j).name+":"+mn.name+"-"+ nodeData.methods.get(j).desc+":"+mn.desc);
                     if (nodeData.methods.get(j).name.equals(mn.name)
                             && nodeData.methods.get(j).desc.equals(mn.desc)) {
                         MethodNode oldMn = nodeData.methods.get(j);

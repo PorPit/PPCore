@@ -42,9 +42,10 @@ public abstract class PPCoreTransformer implements IClassTransformer {
 
     public byte[] transform(String name, byte[] basicClass) {
         int i = 0;
+        // System.out.println(name);
         while (i < transformers.size()) {
             if (transformers.get(i).is(name)) {
-              // ClassNode classNode = new ClassNode();
+                // ClassNode classNode = new ClassNode();
                 //ClassReader classReader = new ClassReader(basicClass);
                 System.out.println("[" + PPCore.MODID + "] Patching " + transformers.get(i).className + "");
                 byte[] classData = transformers.get(i).transform(basicClass);
@@ -76,26 +77,26 @@ public abstract class PPCoreTransformer implements IClassTransformer {
 
 
     /**
-     @asiekierka
+     * @asiekierka
      */
-    public static ClassNode getClassNode(Class cl,String className){
-        try{
-            ClassNode classNode=new ClassNode();
-            String tfClassName=TransformerNames.patchClassName(className);
-            InputStream stream = cl.getClassLoader().getResourceAsStream(tfClassName.replace('.', '/')+".class");
-            ClassReader classReader=new ClassReader(ByteStreams.toByteArray(stream));
+    public static ClassNode getClassNode(Class cl, String className) {
+        try {
+            ClassNode classNode = new ClassNode();
+            String tfClassName = TransformerNames.patchClassName(className);
+            InputStream stream = cl.getClassLoader().getResourceAsStream(tfClassName.replace('.', '/') + ".class");
+            ClassReader classReader = new ClassReader(ByteStreams.toByteArray(stream));
             classReader.accept(classNode, 0);
             return classNode;
-        }catch (IOException e){
-            System.out.println("faild to load:"+className);
-        }catch (NullPointerException e){
-            System.out.println("class:"+className +" not found");
+        } catch (IOException e) {
+            System.out.println("faild to load:" + className);
+        } catch (NullPointerException e) {
+            System.out.println("class:" + className + " not found");
         }
         return null;
     }
 
     /**
-     @asiekierka
+     * @asiekierka
      */
     public static ClassNode spliceClasses(final ClassNode data, final String className, final String... methods) {
         try (InputStream stream = PPCoreTransformer.class.getClassLoader().getResourceAsStream(className.replace('.', '/') + ".class")) {
@@ -106,12 +107,12 @@ public abstract class PPCoreTransformer implements IClassTransformer {
     }
 
     /**
-     @asiekierka
+     * 作者 @asiekierka
      */
     public static ClassNode spliceClasses(final ClassNode nodeData, final byte[] dataSplice, final String className, final String... methods) {
         // System.out.println("Splicing from " + className + " to " + targetClassName)
         if (dataSplice == null) {
-            throw new RuntimeException("Class " + className + " not found! This is a FoamFix bug!");
+            throw new RuntimeException("Class " + className + " not found!");
         }
 
         final Set<String> methodSet = Sets.newHashSet(methods);
@@ -137,18 +138,18 @@ public abstract class PPCoreTransformer implements IClassTransformer {
         }
 
         for (int i = 0; i < nodeSplice.methods.size(); i++) {
-            for(int k=0;k<methodSet.size();k++){
+            for (int k = 0; k < methodSet.size(); k++) {
 
             }
             if (methodSet.contains(nodeSplice.methods.get(i).name)) {
                 MethodNode mn = nodeSplice.methods.get(i);
-                String srgName=methodList.get((methodList.indexOf(mn.name)) & (~1));
+                String srgName = methodList.get((methodList.indexOf(mn.name)) & (~1));
 
-                String notchName=Transformer.patchMethodName(targetClassName2, srgName, mn.desc);
-                String notchDesc=Transformer.patchDESC(mn.desc);
+                String notchName = Transformer.patchMethodName(targetClassName2, srgName, mn.desc);
+                String notchDesc = Transformer.patchDESC(mn.desc);
                 boolean added = false;
-                mn.name=notchName;
-                mn.desc=notchDesc;
+                mn.name = notchName;
+                mn.desc = notchDesc;
 
                 for (int j = 0; j < nodeData.methods.size(); j++) {
                     //System.out.println( nodeData.methods.get(j).name+":"+mn.name+"-"+ nodeData.methods.get(j).desc+":"+mn.desc);

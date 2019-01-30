@@ -1,10 +1,21 @@
 package com.porpit.ppcore.util;
 
 import com.porpit.ppcore.PPCore;
+import net.minecraftforge.fml.common.versioning.ComparableVersion;
 
 public class VersionCompare {
     public static int compareVersion(String version1, String version2) {
-        try{
+        try {
+            ComparableVersion v1 = new ComparableVersion(version1);
+            ComparableVersion v2 = new ComparableVersion(version2);
+            return v1.compareTo(v2);
+        } catch (Exception e) {
+            PPCore.logger.error("版本比较失败~");
+        }
+        return 0;
+
+
+       /* try{
             if (version1 == null || version2 == null) {
                 return 0;
             }
@@ -24,7 +35,7 @@ public class VersionCompare {
         }catch (Exception e){
             PPCore.logger.error("版本比较失败~");
         }
-        return 0;
+        return 0;*/
 
 
     }

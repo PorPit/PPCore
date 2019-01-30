@@ -13,9 +13,11 @@ public abstract class Transformer {
 	public static ArrayList<Transformer> transformers = new ArrayList<Transformer>();
 
 	public final String className;
+	public final String originClassName;
 
 	public Transformer(String className) {
 		transformers.add(this);
+		this.originClassName=className;
 		this.className = TransformerNames.patchClassName(className);
 	}
 

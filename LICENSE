@@ -142,10 +142,10 @@ includes interface definition files associated with source files for
 the work, and the source code for shared libraries and dynamically
 linked subprograms that the work is specifically designed to require,
 such as by intimate data communication or control flow between those
-subprograms and other parts of the work.
+subprograms and other enumParts of the work.
 
   The Corresponding Source need not include anything that users
-can regenerate automatically from other parts of the Corresponding
+can regenerate automatically from other enumParts of the Corresponding
 Source.
 
   The Corresponding Source for a work in source code form is that
@@ -222,7 +222,7 @@ terms of section 4, provided that you also meet all of these conditions:
     c) You must license the entire work, as a whole, under this
     License to anyone who comes into possession of a copy.  This
     License will therefore apply, along with any applicable section 7
-    additional terms, to the whole of the work, and all its parts,
+    additional terms, to the whole of the work, and all its enumParts,
     regardless of how they are packaged.  This License gives no
     permission to license the work in any other way, but it does not
     invalidate such permission if you have separately received it.
@@ -240,7 +240,7 @@ in or on a volume of a storage or distribution medium, is called an
 used to limit the access or legal rights of the compilation's users
 beyond what the individual works permit.  Inclusion of a covered work
 in an aggregate does not cause this License to apply to the other
-parts of the aggregate.
+enumParts of the aggregate.
 
   6. Conveying Non-Source Forms.
 
@@ -257,7 +257,7 @@ in one of these ways:
     b) Convey the object code in, or embodied in, a physical product
     (including a physical distribution medium), accompanied by a
     written offer, valid for at least three years and valid for as
-    long as you offer spare parts or customer support for that product
+    long as you offer spare enumParts or customer support for that product
     model, to give anyone who possesses the object code either (1) a
     copy of the Corresponding Source for all the software in the
     product that is covered by this License, on a durable physical
@@ -658,7 +658,7 @@ notice like this when it starts in an interactive mode:
     under certain conditions; type `show c' for details.
 
 The hypothetical commands `show w' and `show c' should show the appropriate
-parts of the General Public License.  Of course, your program's commands
+enumParts of the General Public License.  Of course, your program's commands
 might be different; for a GUI interface, you would use an "about box".
 
   You should also get your employer (if you work as a programmer) or school,

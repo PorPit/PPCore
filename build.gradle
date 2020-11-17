@@ -2,28 +2,162 @@ buildscript {
     repositories {
         jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = 'https://repo.spongepowered.org/maven' }
+        mavenLocal()
+        maven {
+            url "http://maven.aliyun.com/nexus/content/groups/public"
+        }
+        mavenCentral()
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-
 
 version = "${Mod_Version}"
 group = "com.porpit.ppcore" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "PPCore-1.12.2"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
 }
+task javadocJar(type: Jar) {
+    classifier = "javadoc"
+}
+task sourcesJar(type: Jar) {
+    classifier = "sources"
+    from sourceSets.main.allJava
+    from sourceSets.api.allJava
+}
+
+
+//设置任务依赖关系,打jar包的同时,打源码包
+jar.dependsOn(sourcesJar)
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+task("uploadJars", dependsOn: "build") {
+    description = "uploads JARs"
+    apply plugin: "maven"
+    uploadArchives {
+
+    }
+}
+
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: "PorPit", password: "Qaz712877]'/")
+            }
+            pom.groupId="com.github.porpit"
+            pom.artifactId="$project.name"
+            pom.version="$version"
+            pom.project{
+                name = "PPCore"
+                description = 'PPCore'
+                url = 'https://github.com/PorPit/PPCore'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'porpit'
+                        name = 'porpit'
+                        email = '692066768@qq.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/PorPit/PPCore.git'
+                    developerConnection = 'scm:git:ssh://github.com/PorPit/PPCore.git'
+                    url = 'https://github.com/PorPit/PPCore'
+                }
+            }
+        }
+    }
+}
+signing {
+    sign configurations.archives
+}
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+//            如果是war包填写components.web，如果是jar包填写components.java
+            from components.java
+//            指定group/artifact/version信息，可以不填。默认使用项目group/name/version作为groupId/artifactId/version
+//            groupId需要注意一下,如果下面仓库的配置是oss.sonatype.org(即中央仓库),那么这里的groupId必须为你在sonatype中申请的ISSUE中设置的ID
+            groupId "com.github.porpit"
+            artifactId "$project.name"
+            version "$version"
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = "PPCore"
+                description = 'PPCore'
+                url = 'https://github.com/PorPit/PPCore'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'porpit'
+                        name = 'porpit'
+                        email = '692066768@qq.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/PorPit/PPCore.git'
+                    developerConnection = 'scm:git:ssh://github.com/PorPit/PPCore.git'
+                    url = 'https://github.com/PorPit/PPCore'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+
+            if (project.version.endsWith('-SNAPSHOT')) {
+//                快照版本地址
+//            这里如果配置的是sonatype(中央仓库的地址),需要注意上方的groupId,应该跟sonatype中的对应的ISSUE中设置的Group Id 一致
+                url "https://oss.sonatype.org/content/repositories/snapshots"
+            } else {
+//                正式版本地址
+//                这里如果配置的是sonatype(中央仓库的地址),需要注意上方的groupId,应该跟sonatype中的对应的ISSUE中设置的Group Id 一致
+                url "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            }
+            credentials {
+                username = 'PorPit'
+                password = "Qaz712877]'/"
+            }
+        }
+    }
+}
 
 minecraft {
-    version = "1.12.2-14.23.4.2705"
+    version = "1.12.2-14.23.5.2768"
     runDir = "run"
-    
+
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
@@ -34,28 +168,29 @@ minecraft {
     replace "%PPCoreVersion%", project.version
     replaceIn "PPCore.java"
 }
-
+mixin {
+    add sourceSets.main, "mixins.ppcore.refmap.json"
+}
+repositories {
+    maven { url = 'https://repo.spongepowered.org/maven' }
+}
+configurations {
+    shade
+    compile.extendsFrom shade
+}
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-      
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
-    // except that these dependencies get remapped to your current MCP mappings
-    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    shade('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+        transitive = false
+    }
+}
+def coreModManifest = {
+    attributes "Maven-Artifact": "${group}:${name}:${version}"
+    attributes "FMLCorePlugin": "com.porpit.ppcore.core.PPPatchingLoader"
+    attributes "TweakClass": "org.spongepowered.asm.launch.MixinTweaker"
+    attributes "TweakOrder": 0
+    attributes "FMLCorePluginContainsFMLMod": true
+    attributes "ForceLoadAsMod": true
+    attributes 'FMLCorePluginContainsFMLMod': 'com.porpit.ppcore.core.PPDummy'
 
 }
 
@@ -67,26 +202,37 @@ processResources {
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
+
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
-        
+
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
 }
 
-	
+
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
 jar {
-	manifest {
-		attributes 'FMLCorePlugin': 'com.porpit.ppcore.core.PPPatchingLoader'
-		attributes 'FMLCorePluginContainsFMLMod': 'com.porpit.ppcore.core.PPDummy'
-		attributes 'ForceLoadAsMod': 'true'
-	}
+    manifest coreModManifest
+
+    from sourceSets.main.output
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)) {
+            rename 'LICENSE.txt', 'org/spongepowered/LICENSE.txt'
+
+            exclude 'META-INF/*.SF'
+            exclude 'META-INF/*.RSA'
+            exclude 'META-INF/*.MF'
+
+            exclude '**/*.html'
+        }
+    }
+    rename '(.+_at.cfg)', 'META-INF/$1'
 }
+

@@ -8,14 +8,14 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-
+import org.apache.logging.log4j.Logger;
 public class JSONHelper {
-    public static JsonObject getJsonObject(String url){
+    public static JsonObject getJsonObject(Logger logger,String url){
         BufferedReader in = null;
         JsonObject jsonObject=null;
         try {
             String result = "";
-            PPCore.logger.debug("尝试获取Json");
+            logger.debug("尝试获取Json");
             URL realUrl = new URL(url);
             // 打开和URL之间的连接
             URLConnection connection = realUrl.openConnection();
@@ -39,7 +39,7 @@ public class JSONHelper {
 
 
         } catch (Exception e) {
-            System.out.println("获取Json数据出现异常！" + e);
+            System.out.println("获取Json数据出现异常！"+url + e);
             e.printStackTrace();
         }
         // 使用finally块来关闭输入流

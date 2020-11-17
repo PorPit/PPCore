@@ -2,12 +2,15 @@ package com.porpit.ppcore.core;
 
 import com.porpit.ppcore.transform.TransformerNames;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.Map;
 
 @IFMLLoadingPlugin.MCVersion("1.12.2")
 public class PPPatchingLoader implements IFMLLoadingPlugin {
+	public static final Logger logger = LogManager.getLogger("PPCore");
 
 	public static File location;
 
@@ -23,7 +26,7 @@ public class PPPatchingLoader implements IFMLLoadingPlugin {
 
 	@Override
 	public String getSetupClass() {
-		return null;
+		return PPMixinSetupHook.class.getName();
 	}
 
 	@Override

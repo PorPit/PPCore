@@ -1,16 +1,17 @@
 package com.porpit.ppcore.util;
 
-import com.porpit.ppcore.PPCore;
 import net.minecraftforge.fml.common.versioning.ComparableVersion;
+import org.apache.logging.log4j.Logger;
+
 
 public class VersionCompare {
-    public static int compareVersion(String version1, String version2) {
+    public static int compareVersion(String version1, String version2, Logger logger) {
         try {
             ComparableVersion v1 = new ComparableVersion(version1);
             ComparableVersion v2 = new ComparableVersion(version2);
             return v1.compareTo(v2);
         } catch (Exception e) {
-            PPCore.logger.error("版本比较失败~");
+            logger.error("版本比较失败~");
         }
         return 0;
 
